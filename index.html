@@ -72,18 +72,20 @@
             width: 85%;
             max-width: 350px;
             text-align: center;
-            z-index: 20; /* ให้อยู่เหนือหัวใจที่ตกลงมาเล็กน้อย */
+            z-index: 20;
             position: relative;
         }
 
         .couple-img {
             width: 100%;
+            height: auto;
             border-radius: 12px;
             margin-bottom: 15px;
             border: 5px solid #f8f9fa;
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 2s ease, transform 2s ease;
+            object-fit: cover;
         }
 
         .couple-img.show {
@@ -147,7 +149,7 @@
     </div>
 
     <div id="card">
-        <img src="https://via.placeholder.com/350x350?text=Your+Photo" id="main-img" class="couple-img" alt="Valentine Photo">
+        <img src="image.jpg" id="main-img" class="couple-img" alt="Valentine Photo">
         
         <h2 id="card-title">Dear Dok Dok ของเรา</h2>
         <div id="typing-text"></div>
@@ -241,7 +243,6 @@
                 player.playVideo(); 
             }
             
-            // เริ่มหัวใจตก
             setInterval(createHeart, 300);
             
             document.getElementById('lock-screen').style.opacity = '0';
