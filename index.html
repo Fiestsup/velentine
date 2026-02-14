@@ -23,7 +23,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* หน้า Lock Screen */
         #lock-screen {
             text-align: center;
             transition: opacity 0.6s ease-out;
@@ -62,7 +61,6 @@
         #status-text { color: var(--primary-pink); font-weight: bold; margin-bottom: 5px; }
         #percent { color: var(--primary-pink); font-size: 1.2rem; }
 
-        /* หน้า Card หลังปลดล็อก */
         #card {
             display: none;
             background: var(--white);
@@ -78,14 +76,14 @@
 
         .couple-img {
             width: 100%;
-            max-height: 300px; /* จำกัดความสูงเพื่อความสวยงาม */
+            max-height: 350px;
             border-radius: 12px;
             margin-bottom: 15px;
             border: 5px solid #f8f9fa;
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 2s ease, transform 2s ease;
-            object-fit: cover; /* ให้รูปไม่เบี้ยว */
+            object-fit: cover;
         }
 
         .couple-img.show {
@@ -117,7 +115,6 @@
         }
         .music-info.show { opacity: 1; }
 
-        /* เอฟเฟคหัวใจตกลงมา */
         .falling-heart {
             position: fixed;
             top: -20px;
@@ -130,9 +127,7 @@
         }
 
         @keyframes fall {
-            to {
-                transform: translateY(105vh) rotate(360deg);
-            }
+            to { transform: translateY(105vh) rotate(360deg); }
         }
 
         #youtube-player { position: absolute; top: -1000px; left: -1000px; }
@@ -150,7 +145,7 @@
     </div>
 
     <div id="card">
-        <img src="https://raw.githubusercontent.com/Fiestsup/velentine/main/image.jpg" id="main-img" class="couple-img" alt="Valentine Photo">
+        <img src="image.jpg" id="main-img" class="couple-img" alt="Valentine Photo">
         
         <h2 id="card-title">Dear Dok Dok ของเรา</h2>
         <div id="typing-text"></div>
@@ -163,7 +158,6 @@
     <div id="youtube-player"></div>
 
     <script>
-        // 1. YouTube IFrame API
         var player;
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -172,20 +166,12 @@
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
-                height: '0',
-                width: '0',
+                height: '0', width: '0',
                 videoId: 'CzsmdST83GE', 
-                playerVars: { 
-                    'autoplay': 0, 
-                    'controls': 0, 
-                    'loop': infinity, 
-                    'playlist': 'CzsmdST83GE',
-                    'origin': window.location.origin 
-                }
+                playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': 'CzsmdST83GE' }
             });
         }
 
-        // 2. เอฟเฟคหัวใจตก
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('falling-heart');
@@ -195,12 +181,11 @@
             heart.style.fontSize = size;
             const duration = (Math.random() * 3 + 2);
             heart.style.animationDuration = duration + "s";
-            heart.style.opacity = (Math.random() * 0.5 + 0.5).toString();
+            heart.style.opacity = Math.random() * 0.5 + 0.5;
             document.body.appendChild(heart);
             setTimeout(() => { heart.remove(); }, duration * 1000);
         }
 
-        // 3. Logic ปลดล็อก
         let holdTimer;
         let progress = 0;
         const heartBtn = document.getElementById('heartBtn');
@@ -246,36 +231,22 @@
 
         function unlock() {
             clearInterval(holdTimer);
-            if (player && typeof player.playVideo === 'function') {
-                player.playVideo(); 
-            }
-            
+            if (player && player.playVideo) player.playVideo(); 
             setInterval(createHeart, 300);
-            
             document.getElementById('lock-screen').style.opacity = '0';
-            
             setTimeout(() => {
                 document.getElementById('lock-screen').style.display = 'none';
-                const card = document.getElementById('card');
-                card.style.display = 'block';
-
-                setTimeout(() => {
-                    document.getElementById('main-img').classList.add('show');
-                }, 500);
-
+                document.getElementById('card').style.display = 'block';
+                setTimeout(() => { document.getElementById('main-img').classList.add('show'); }, 500);
                 setTimeout(() => {
                     document.getElementById('card-title').classList.add('show');
                     const message = "Happy Valentine's day ka 💙🌹 เจ้าต้องอยู่กับเราไปนานๆ ถึงแม้เจ้าจะรักพาเวลมากกว่าเราก็ตาม เราอาจเป็นแฟนที่ไม่ได้ดีมากแต่เจ้าต้องรักเราเข้าใจไหม";
                     typeWriter(message, document.getElementById('typing-text'), 100);
                 }, 1500);
-
-                setTimeout(() => {
-                    document.getElementById('music-tag').classList.add('show');
-                }, 4000);
+                setTimeout(() => { document.getElementById('music-tag').classList.add('show'); }, 4000);
             }, 600);
         }
 
-        // Event Listeners
         heartBtn.addEventListener('mousedown', startHold);
         heartBtn.addEventListener('mouseup', endHold);
         heartBtn.addEventListener('mouseleave', endHold);
