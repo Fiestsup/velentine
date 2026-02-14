@@ -13,7 +13,7 @@
 
         body {
             background-color: var(--bg-pink);
-            font-family: 'Arial', sans-serif;
+            font-family: 'Arial', 'Helvetica', sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -78,14 +78,14 @@
 
         .couple-img {
             width: 100%;
-            height: auto;
+            max-height: 300px; /* จำกัดความสูงเพื่อความสวยงาม */
             border-radius: 12px;
             margin-bottom: 15px;
             border: 5px solid #f8f9fa;
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 2s ease, transform 2s ease;
-            object-fit: cover;
+            object-fit: cover; /* ให้รูปไม่เบี้ยว */
         }
 
         .couple-img.show {
@@ -93,7 +93,7 @@
             transform: translateY(0);
         }
 
-        h2 { color: #c2185b; margin: 10px 0; opacity: 0; transition: opacity 1s ease; }
+        h2 { color: #c2185b; margin: 10px 0; opacity: 0; transition: opacity 1s ease; font-size: 1.5rem; }
         h2.show { opacity: 1; }
 
         #typing-text { 
@@ -102,6 +102,7 @@
             min-height: 60px;
             text-align: left;
             margin-top: 10px;
+            font-size: 0.95rem;
         }
 
         .music-info {
@@ -109,7 +110,7 @@
             padding: 10px;
             border-radius: 50px;
             margin-top: 15px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--primary-pink);
             opacity: 0;
             transition: opacity 1s ease;
@@ -149,7 +150,7 @@
     </div>
 
     <div id="card">
-        <img src="image.jpg" id="main-img" class="couple-img" alt="Valentine Photo">
+        <img src="./image.jpg" id="main-img" class="couple-img" alt="Valentine Photo">
         
         <h2 id="card-title">Dear Dok Dok ของเรา</h2>
         <div id="typing-text"></div>
@@ -162,7 +163,7 @@
     <div id="youtube-player"></div>
 
     <script>
-        // 1. YouTube IFrame API Setup
+        // 1. YouTube IFrame API
         var player;
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -174,7 +175,13 @@
                 height: '0',
                 width: '0',
                 videoId: 'CzsmdST83GE', 
-                playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': 'CzsmdST83GE' }
+                playerVars: { 
+                    'autoplay': 0, 
+                    'controls': 0, 
+                    'loop': infinity, 
+                    'playlist': 'CzsmdST83GE',
+                    'origin': window.location.origin 
+                }
             });
         }
 
@@ -184,11 +191,11 @@
             heart.classList.add('falling-heart');
             heart.innerHTML = '❤';
             heart.style.left = Math.random() * 100 + "vw";
-            const size = Math.random() * 20 + 10 + "px";
+            const size = (Math.random() * 20 + 10) + "px";
             heart.style.fontSize = size;
-            const duration = Math.random() * 3 + 2;
+            const duration = (Math.random() * 3 + 2);
             heart.style.animationDuration = duration + "s";
-            heart.style.opacity = Math.random() * 0.5 + 0.5;
+            heart.style.opacity = (Math.random() * 0.5 + 0.5).toString();
             document.body.appendChild(heart);
             setTimeout(() => { heart.remove(); }, duration * 1000);
         }
@@ -202,7 +209,7 @@
         const statusText = document.getElementById('status-text');
 
         function startHold(e) {
-            e.preventDefault();
+            if (e.type === 'touchstart') e.preventDefault();
             statusText.innerText = "กดค้างไว้นะ...";
             holdTimer = setInterval(() => {
                 if (progress < 100) {
@@ -239,7 +246,7 @@
 
         function unlock() {
             clearInterval(holdTimer);
-            if (player && player.playVideo) {
+            if (player && typeof player.playVideo === 'function') {
                 player.playVideo(); 
             }
             
@@ -268,10 +275,11 @@
             }, 600);
         }
 
+        // Event Listeners
         heartBtn.addEventListener('mousedown', startHold);
         heartBtn.addEventListener('mouseup', endHold);
         heartBtn.addEventListener('mouseleave', endHold);
-        heartBtn.addEventListener('touchstart', startHold);
+        heartBtn.addEventListener('touchstart', startHold, {passive: false});
         heartBtn.addEventListener('touchend', endHold);
     </script>
 </body>
